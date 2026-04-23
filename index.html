@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Pembelian Tiket</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f6f9;margin:0;padding:0}
+.container{max-width:500px;margin:auto;padding:20px}
+.card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,0.1);margin-top:20px}
+h2{text-align:center}
+input,textarea,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #ccc}
+button{width:100%;padding:12px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-size:16px;cursor:pointer}
+.hidden{display:none}
+.timer{color:red;text-align:center;margin-top:10px}
+.loader{border:5px solid #f3f3f3;border-top:5px solid #2563eb;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:20px auto}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.qr{text-align:center;margin:15px 0}
+.total{font-weight:bold;margin-top:10px;text-align:center}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- PAGE 1 -->
+<div id="page1" class="card">
+<h2>Data Pembeli</h2>
+<input type="text" placeholder="Nama Lengkap" required>
+<input type="text" placeholder="Nomor Identitas">
+<input type="email" placeholder="Email">
+<input type="tel" placeholder="No. Telepon">
+<textarea placeholder="Alamat"></textarea>
+
+<select id="kategori" onchange="hitungTotal()">
+<option value="320000">Regular Festival - Rp320.000</option>
+<option value="495000">Regular Premium - Rp495.000</option>
+<option value="595000">Fast Track - Rp595.000</option>
+</select>
+
+<input type="number" id="jumlah" placeholder="Jumlah Ticket" oninput="hitungTotal()">
+
+<div class="total" id="total">Total: Rp0</div>
+
+<button onclick="nextPage()">Lanjut</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="card hidden">
+<h2>Pembayaran</h2>
+<div class="qr">
+<p><b>Silahkan SCAN QRIS PEMBAYARAN</b></p>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=QRIS" alt="QRIS">
+<p>Masukan sesuai nominal</p>
+</div>
+<input type="file">
+<div class="timer" id="timer">Sisa waktu: 10:00</div>
+<button onclick="submitForm()">Submit</button>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="card hidden">
+<h2>Terima Kasih 🎉</h2>
+<p>Pembelian tiket berhasil!</p>
+<p>E-ticket akan dikirim melalui email konfirmasi.</p>
+<button onclick="resetForm()">Kembali ke Awal</button>
+</div>
+
+<div id="loading" class="hidden">
+<div class="loader"></div>
+<p style="text-align:center">Memproses...</p>
+</div>
+
+</div>
+
+<script>
+let time = 600;
+let timerInterval;
+
+function hitungTotal(){
+let harga = document.getElementById('kategori').value;
+let jumlah = document.getElementById('jumlah').value;
+let total = harga * jumlah;
+
+if(!jumlah) total = 0;
+
+document.getElementById('total').innerText = "Total: Rp" + total.toLocaleString('id-ID');
+}
+
+function nextPage(){
+document.getElementById('page1').classList.add('hidden');
+document.getElementById('page2').classList.remove('hidden');
+startTimer();
+}
+
+function startTimer(){
+timerInterval = setInterval(()=>{
+time--;
+let min = Math.floor(time/60);
+let sec = time%60;
+document.getElementById('timer').innerText = `Sisa waktu: ${min}:${sec<10?'0'+sec:sec}`;
+if(time<=0){
+clearInterval(timerInterval);
+alert('Waktu habis!');
+resetForm();
+}
+},1000);
+}
+
+function submitForm(){
+document.getElementById('page2').classList.add('hidden');
+document.getElementById('loading').classList.remove('hidden');
+setTimeout(()=>{
+document.getElementById('loading').classList.add('hidden');
+document.getElementById('page3').classList.remove('hidden');
+},3000);
+}
+
+function resetForm(){
+location.reload();
+}
+</script>
+
+</body>
+</html>
