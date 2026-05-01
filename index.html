@@ -1,222 +1,334 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Form Pembelian Tiket</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOEKARNOFEST - Tiket Event</title>
 
-<style>
-body{
-  font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#eef2ff,#f8fafc);
-  margin:0;
-}
-.container{
-  max-width:500px;
-  margin:auto;
-  padding:20px;
-}
-.card{
-  background:#fff;
-  padding:20px;
-  border-radius:16px;
-  box-shadow:0 8px 25px rgba(0,0,0,0.08);
-  margin-top:20px;
-}
-h2{text-align:center}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-input,textarea,select{
-  width:100%;
-  padding:12px;
-  margin:8px 0;
-  border-radius:10px;
-  border:1px solid #ddd;
-}
+    body {
+      background: #0f0f0f;
+      color: white;
+    }
 
-button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:10px;
-  background:#2563eb;
-  color:#fff;
-  font-size:16px;
-  cursor:pointer;
-}
+    .container {
+      max-width: 430px;
+      margin: auto;
+      min-height: 100vh;
+      background: #171717;
+      overflow: hidden;
+    }
 
-button:disabled{background:#ccc}
+    .banner img {
+      width: 100%;
+      display: block;
+    }
 
-.hidden{display:none}
+    .content {
+      padding: 20px;
+    }
 
-.total{
-  text-align:center;
-  font-weight:bold;
-  margin-top:10px;
-  font-size:18px;
-  color:#2563eb;
-}
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: center;
+      color: #ffd700;
+    }
 
-.qr{text-align:center;margin:20px 0}
+    .ticket-box {
+      background: #242424;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 20px;
+      border: 2px solid #ffd700;
+    }
 
-.qr img{
-  width:220px;
-  max-width:100%;
-  border-radius:16px;
-  padding:10px;
-  background:#fff;
-  box-shadow:0 6px 18px rgba(0,0,0,0.15);
-}
+    .ticket-box h3 {
+      margin-bottom: 12px;
+      color: #ffd700;
+    }
 
-.timer{
-  text-align:center;
-  color:red;
-  font-weight:bold;
-}
+    .ticket {
+      background: #111;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid #333;
+    }
 
-.loader{
-  border:5px solid #f3f3f3;
-  border-top:5px solid #2563eb;
-  border-radius:50%;
-  width:40px;height:40px;
-  animation:spin 1s linear infinite;
-  margin:20px auto;
-}
+    .ticket-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
 
-@keyframes spin{
-  100%{transform:rotate(360deg)}
-}
-</style>
+    .price {
+      color: #00ff99;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .limit {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #2a2a2a;
+      color: white;
+      font-size: 15px;
+    }
+
+    .total-box {
+      background: #111;
+      border: 2px dashed #ffd700;
+      padding: 15px;
+      border-radius: 14px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .total-box h2 {
+      color: #00ff99;
+      margin-top: 8px;
+    }
+
+    .qris {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .qris img {
+      width: 100%;
+      border-radius: 20px;
+      border: 3px solid #ffd700;
+      background: white;
+      padding: 10px;
+    }
+
+    .upload-box {
+      margin-top: 20px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(90deg, #ffd700, #ffb700);
+      color: black;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      transform: scale(1.02);
+    }
+
+    .loading {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+    }
+
+    .spinner {
+      width: 70px;
+      height: 70px;
+      border: 8px solid #333;
+      border-top: 8px solid #ffd700;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading p {
+      margin-top: 20px;
+      font-size: 18px;
+      color: white;
+    }
+
+    .success {
+      display: none;
+      margin-top: 20px;
+      background: #003b22;
+      border: 1px solid #00ff99;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      color: #00ff99;
+    }
+  </style>
 </head>
-
 <body>
+
 <div class="container">
 
-<!-- PAGE 1 -->
-<div id="page1" class="card">
-<h2>Data Pembeli</h2>
+  <!-- BANNER EVENT -->
+  <div class="banner">
+    <img src="GANTI-DENGAN-GAMBAR-EVENT-ANDA.jpg" alt="Banner Event">
+  </div>
 
-<input type="text" placeholder="Nama Lengkap" required>
-<input type="text" placeholder="Nomor Identitas">
-<input type="email" placeholder="Email">
-<input type="tel" placeholder="No. Telepon">
-<textarea placeholder="Alamat"></textarea>
+  <div class="content">
 
-<select id="kategori" onchange="hitungTotal()">
-<option value="320000">Regular Festival - Rp320.000</option>
-<option value="495000">Regular Premium - Rp495.000</option>
-<option value="595000">Fast Track - Rp595.000</option>
-</select>
+    <div class="title">PEMBELIAN TIKET EVENT</div>
 
-<input type="number" id="jumlah" placeholder="Jumlah Ticket" oninput="hitungTotal()">
+    <div class="ticket-box">
+      <h3>DAFTAR TIKET</h3>
 
-<div class="total" id="total">Total: Rp0</div>
+      <div class="ticket">
+        <div class="ticket-name">PREMIUM</div>
+        <div class="price">Rp. 400.000</div>
+      </div>
 
-<button onclick="nextPage()">Lanjut</button>
-</div>
+      <div class="ticket">
+        <div class="ticket-name">FAST TRACK</div>
+        <div class="price">Rp. 600.000</div>
+      </div>
 
-<!-- PAGE 2 -->
-<div id="page2" class="card hidden">
-<h2>Pembayaran</h2>
+      <div class="limit">
+        Maksimal pembelian tiket: <b>10 tiket</b>
+      </div>
+    </div>
 
-<div class="total" id="totalBayar">Total Bayar: Rp0</div>
+    <label>Nama Lengkap</label>
+    <input type="text" id="nama" placeholder="Masukan nama lengkap">
 
-<div class="qr">
-<p><b>Scan QRIS di bawah ini</b></p>
-<img src="qris.png">
-<p>Bayar sesuai nominal di atas</p>
-</div>
+    <label>E-mail</label>
+    <input type="email" id="email" placeholder="Masukan e-mail aktif">
 
-<p style="text-align:center;color:red;font-size:13px;">
-Pastikan nominal transfer sesuai agar tiket diproses
-</p>
+    <label>Pilih Tiket</label>
+    <select id="ticketType" onchange="hitungTotal()">
+      <option value="400000">PREMIUM - Rp. 400.000</option>
+      <option value="600000">FAST TRACK - Rp. 600.000</option>
+    </select>
 
-<input type="file" accept="image/png, image/jpeg">
+    <label>Jumlah Tiket</label>
+    <input type="number" id="jumlah" min="1" max="10" value="1" onchange="hitungTotal()">
 
-<div class="timer" id="timer">Sisa waktu: 10:00</div>
+    <div class="total-box">
+      TOTAL PEMBAYARAN
+      <h2 id="totalHarga">Rp. 400.000</h2>
+    </div>
 
-<button onclick="submitForm()">Submit</button>
-</div>
+    <!-- QRIS -->
+    <div class="qris">
+      <h3 style="margin-bottom:10px;color:#ffd700;">SCAN QRIS PEMBAYARAN</h3>
+      <img src="GANTI-DENGAN-QRIS-ANDA.png" alt="QRIS">
+    </div>
 
-<!-- PAGE 3 -->
-<div id="page3" class="card hidden">
-<h2>Terima Kasih 🎉</h2>
-<p style="text-align:center">Pembelian tiket berhasil!</p>
-<p style="text-align:center">E-ticket akan dikirim melalui email.</p>
+    <!-- UPLOAD -->
+    <div class="upload-box">
+      <label>Upload Bukti Pembayaran</label>
+      <input type="file" id="bukti">
+    </div>
 
-<button onclick="resetForm()">Kembali ke Awal</button>
+    <button class="btn" onclick="prosesPembelian()">
+      BELI SEKARANG
+    </button>
+
+    <div class="success" id="successBox">
+      Pembayaran berhasil diverifikasi!<br><br>
+      E-mail konfirmasi & E-Ticket berhasil dikirim.
+    </div>
+
+  </div>
 </div>
 
 <!-- LOADING -->
-<div id="loading" class="hidden">
-<div class="loader"></div>
-<p style="text-align:center">Memproses...</p>
-</div>
-
+<div class="loading" id="loadingScreen">
+  <div class="spinner"></div>
+  <p>Memproses Pembelian...</p>
 </div>
 
 <script>
-let time = 600;
-let timerInterval;
-let totalGlobal = 0;
 
-function hitungTotal(){
-  let harga = document.getElementById('kategori').value;
-  let jumlah = document.getElementById('jumlah').value;
-  let total = harga * jumlah;
-
-  if(!jumlah) total = 0;
-
-  totalGlobal = total;
-
-  document.getElementById('total').innerText =
-    "Total: Rp" + total.toLocaleString('id-ID');
+function formatRupiah(angka) {
+  return 'Rp. ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
-function nextPage(){
-  if(totalGlobal === 0){
-    alert("Pilih tiket dulu!");
+function hitungTotal() {
+  let harga = parseInt(document.getElementById('ticketType').value);
+  let jumlah = parseInt(document.getElementById('jumlah').value);
+
+  if(jumlah > 10) {
+    alert('Maksimal pembelian hanya 10 tiket');
+    document.getElementById('jumlah').value = 10;
+    jumlah = 10;
+  }
+
+  let total = harga * jumlah;
+
+  document.getElementById('totalHarga').innerText = formatRupiah(total);
+}
+
+function prosesPembelian() {
+
+  let nama = document.getElementById('nama').value;
+  let email = document.getElementById('email').value;
+
+  if(nama === '' || email === '') {
+    alert('Lengkapi data terlebih dahulu');
     return;
   }
 
-  document.getElementById('page1').classList.add('hidden');
-  document.getElementById('page2').classList.remove('hidden');
+  document.getElementById('loadingScreen').style.display = 'flex';
 
-  document.getElementById('totalBayar').innerText =
-    "Total Bayar: Rp" + totalGlobal.toLocaleString('id-ID');
+  setTimeout(() => {
 
-  startTimer();
+    document.getElementById('loadingScreen').style.display = 'none';
+
+    document.getElementById('successBox').style.display = 'block';
+
+    // SIMULASI EMAIL KONFIRMASI
+    console.log('E-mail konfirmasi terkirim ke:', email);
+
+    // REDIRECT KE HALAMAN UTAMA
+    setTimeout(() => {
+      window.location.href = 'https://tiket.poliponi.online';
+    }, 5000);
+
+  }, 4000);
 }
 
-function startTimer(){
-  timerInterval = setInterval(()=>{
-    time--;
-    let min = Math.floor(time/60);
-    let sec = time%60;
+hitungTotal();
 
-    document.getElementById('timer').innerText =
-      `Sisa waktu: ${min}:${sec<10?'0'+sec:sec}`;
-
-    if(time<=0){
-      clearInterval(timerInterval);
-      alert('Waktu habis!');
-      resetForm();
-    }
-  },1000);
-}
-
-function submitForm(){
-  document.getElementById('page2').classList.add('hidden');
-  document.getElementById('loading').classList.remove('hidden');
-
-  setTimeout(()=>{
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('page3').classList.remove('hidden');
-  },3000);
-}
-
-function resetForm(){
-  location.reload();
-}
 </script>
 
 </body>
